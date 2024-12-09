@@ -44,26 +44,15 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    user_message = event.message.text
-
-    if user_message == "找美食":
-        reply_message = LocationSendMessage(
-            title='浪人鐵板燒',
-            address='433台中市沙鹿區北勢東路585號',
-            latitude=24.233742589788786,
-            longitude=120.5763892952485
+    message = text=event.message.text
+    if re.match('告訴我秘密',message):
+        audio_message = AudioSendMessage(
+            original_content_url='https://campus-studio.com/download/twsong.mp3',
+            duration=81000
         )
-    elif user_message == "找景點":
-        reply_message = LocationSendMessage(
-            title='高美濕地',
-            address='436台中市清水區美堤街',
-            latitude=24.31287866231519,
-            longitude=120.54925090708151
-        )
+        line_bot_api.reply_message(event.reply_token, audio_message)
     else:
-        reply_message = TextSendMessage(text="很抱歉，我目前無法理解這個內容。")
-    
-    line_bot_api.reply_message(event.reply_token, reply_message)
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(message))
 
 #主程式
 import os
