@@ -42,26 +42,24 @@ def callback():
 #訊息傳遞區塊
 ##### 基本上程式編輯都在這個function #####
 
-movie_data = {
-    "動作片": {
-        "video_url": "https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/videoplayback%20(1).mp4",
-        "thumbnail_url": "https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E8%9E%A2%E5%B9%95%E6%93%B7%E5%8F%96%E7%95%AB%E9%9D%A2%202024-12-09%20205207.png",
-    },
-    
-}
-
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_message = event.message.text
 
-    if user_message in movie_data:
-        movie = movie_data[user_message]
-        reply_message = VideoSendMessage(
-            original_content_url=movie["video_url"],
-            preview_image_url=movie["thumbnail_url"]
-        )
+    if user_message == "今天是我的生日":
+        # 祝福圖片 URL (請將此 URL 替換為你實際的圖片 URL)
+        birthday_image_url = "https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89.jpg"
+        
+        # 回傳圖片和祝福語
+        reply_message = [
+            ImageSendMessage(
+                original_content_url=birthday_image_url,
+                preview_image_url=birthday_image_url
+            ),
+            TextSendMessage(text="生日快樂！祝你有個美好的一年！")
+        ]
     else:
-        reply_message = TextSendMessage(text="抱歉，沒有這類型的影片")
+        reply_message = TextSendMessage(text="很抱歉，我目前無法理解這個內容。")
 
     line_bot_api.reply_message(event.reply_token, reply_message)
 #主程式
