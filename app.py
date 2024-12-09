@@ -42,23 +42,27 @@ def callback():
 #訊息傳遞區塊
 ##### 基本上程式編輯都在這個function #####
 
+movie_data = {
+    "動作片": {
+        "video_url": "https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/videoplayback%20(1).mp4",
+        "thumbnail_url": "https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E8%9E%A2%E5%B9%95%E6%93%B7%E5%8F%96%E7%95%AB%E9%9D%A2%202024-12-09%20205207.png",
+    },
+    
+}
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_message = event.message.text
 
-    if user_message == "熱門音樂":
-        reply_message = AudioSendMessage(
-            original_content_url='https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/Persona%205%20-%20Life%20Will%20Change%20(%E4%B8%AD%E8%8B%B1%E6%AD%8C%E8%A9%9E).mp3',  # 替換為熱門音樂的 URL
-            duration=264000  # 音樂長度（毫秒），例如 264000 表示 4 分 24 秒
-        )
-    elif user_message == "放鬆音樂":
-        reply_message = AudioSendMessage(
-            original_content_url='https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E3%80%90%E5%8D%83%E8%88%87%E5%8D%83%E5%B0%8B%E7%89%87%E5%B0%BE%E6%9B%B2%E3%80%91%E6%B0%B8%E9%81%A0%E5%90%8C%E5%9C%A8%20Always%20With%20Me%20%E4%B8%AD%E6%97%A5%E6%AD%8C%E8%A9%9E.mp3',  # 替換為放鬆音樂的 URL
-            duration=229000  # 音樂長度（毫秒），例如 229000 表示 3 分 49 秒
+    if user_message in movie_data:
+        movie = movie_data[user_message]
+        reply_message = VideoSendMessage(
+            original_content_url=movie["video_url"],
+            preview_image_url=movie["thumbnail_url"]
         )
     else:
-        reply_message = TextSendMessage(text="很抱歉，我目前無法理解這個內容。")
-    
+        reply_message = TextSendMessage(text="抱歉，沒有這類型的影片")
+
     line_bot_api.reply_message(event.reply_token, reply_message)
 #主程式
 import os
