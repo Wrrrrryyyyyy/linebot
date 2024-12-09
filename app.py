@@ -48,14 +48,12 @@ def handle_message(event):
 
     if user_message == "熱門音樂":
         reply_message = AudioSendMessage(
-            original_content_url='https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/Persona%205%20-%20Life%20Will%20Change%20(%E4%B8%AD%E8%8B%B1%E6%AD%8C%E8%A9%9E).mp3
-',  # 替換為熱門音樂的 URL
+            original_content_url='https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/Persona%205%20-%20Life%20Will%20Change%20(%E4%B8%AD%E8%8B%B1%E6%AD%8C%E8%A9%9E).mp3',  # 替換為熱門音樂的 URL
             duration=264,000  # 音樂長度（毫秒），例如 240000 表示 4 分鐘
         )
     elif user_message == "放鬆音樂":
         reply_message = AudioSendMessage(
-            original_content_url='https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E3%80%90%E5%8D%83%E8%88%87%E5%8D%83%E5%B0%8B%E7%89%87%E5%B0%BE%E6%9B%B2%E3%80%91%E6%B0%B8%E9%81%A0%E5%90%8C%E5%9C%A8%20Always%20With%20Me%20%E4%B8%AD%E6%97%A5%E6%AD%8C%E8%A9%9E.mp3
-',  # 替換為放鬆音樂的 URL
+            original_content_url='https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E3%80%90%E5%8D%83%E8%88%87%E5%8D%83%E5%B0%8B%E7%89%87%E5%B0%BE%E6%9B%B2%E3%80%91%E6%B0%B8%E9%81%A0%E5%90%8C%E5%9C%A8%20Always%20With%20Me%20%E4%B8%AD%E6%97%A5%E6%AD%8C%E8%A9%9E.mp3',  # 替換為放鬆音樂的 URL
             duration=229,000  # 音樂長度（毫秒），例如 180000 表示 3 分鐘
         )
     else:
