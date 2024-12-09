@@ -44,9 +44,17 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_message = event.message.text
-    
-    if user_message == "天氣":
-        reply_message = TextSendMessage(text="請稍等，我幫您查詢天氣資訊！")
+
+    if user_message == "心情好":
+        reply_message = StickerSendMessage(
+            package_id='446',  # 請替換為您想使用的貼圖包 ID
+            sticker_id='1992'  # 請替換為您想使用的貼圖 ID
+        )
+    elif user_message == "心情不好":
+        reply_message = StickerSendMessage(
+            package_id='789',  # 請替換為您想使用的貼圖包 ID
+            sticker_id='10880'   # 請替換為您想使用的貼圖 ID
+        )
     else:
         reply_message = TextSendMessage(text="很抱歉，我目前無法理解這個內容。")
     
