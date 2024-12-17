@@ -51,9 +51,9 @@ def handle_message(event):
 
     if user_message == "推薦餐廳":
         imagemap_message = ImagemapSendMessage(
-            base_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89",
+            base_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89.jpg",  # 正確的圖片 URL
             alt_text="推薦餐廳選單",
-            
+            base_size=BaseSize(height=1040, width=1040),  # 調整圖片大小
             actions=[
                 URIImagemapAction(
                     link_uri="https://maps.google.com/?q=日式料理餐廳", 
