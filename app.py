@@ -32,34 +32,23 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     message = event.message.text
-    if re.match('我要訂餐', message):  # 修正縮排錯誤
-        # 顯示訂單詳細內容
-        order_details = TextSendMessage(
-            text='無敵好吃牛肉麵 * 1 ，總價NT200'
+   if re.match('我想吃飯', message):
+        # 顯示 QuickReply 選單
+        quick_reply_message = TextSendMessage(
+            text='請選擇您想要的選項：',
+            quick_reply=QuickReply(items=[
+                QuickReplyButton(action=MessageAction(label="主菜", text="主菜")),
+                QuickReplyButton(action=MessageAction(label="湯品", text="湯品")),
+                QuickReplyButton(action=MessageAction(label="飲料", text="飲料"))
+            ])
         )
-        
-        # 顯示 ConfirmTemplate
-        confirm_template_message = TemplateSendMessage(
-            alt_text='請確認您的訂單',
-            template=ConfirmTemplate(
-                text='確認訂單嗎？',
-                actions=[
-                    PostbackAction(
-                        label='確定',
-                        display_text='訂單已確認',
-                        data='action=confirm_order'
-                    ),
-                    PostbackAction(
-                        label='取消',
-                        display_text='已取消訂單',
-                        data='action=cancel_order'
-                    )
-                ]
-            )
-        )
-        
-        # 先回覆訂單詳情，再顯示 ConfirmTemplate
-        line_bot_api.reply_message(event.reply_token, [order_details, confirm_template_message])
+         line_bot_api.reply_message(event.reply_token, quick_reply_message)
+    elif re.match('主菜', message):
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【主菜】加入購物車"))
+    elif re.match('湯品', message):
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【湯品】加入購物車"))
+    elif re.match('飲料', message):
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【飲料】加入購物車"))
         
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
