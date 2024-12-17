@@ -9,6 +9,9 @@ from linebot import (
 from linebot.exceptions import (
     InvalidSignatureError
 )
+from linebot.models import (
+    ImagemapSendMessage, BaseSize, URIImagemapAction, ImagemapArea
+)
 from linebot.models import *
 
 app = Flask(__name__)
@@ -48,24 +51,24 @@ def handle_message(event):
 
     if user_message == "推薦餐廳":
         imagemap_message = ImagemapSendMessage(
-            base_url = "https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89",  # 圖片基底 URL (去掉副檔名)
+            base_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89",
             alt_text="推薦餐廳選單",
             base_size=BaseSize(height=1040, width=1040),
             actions=[
                 URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=日式料理餐廳",  # 日式料理網址
+                    link_uri="https://maps.google.com/?q=日式料理餐廳", 
                     area=ImagemapArea(x=0, y=0, width=520, height=520)
                 ),
                 URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=西式料理餐廳",  # 西式料理網址
+                    link_uri="https://maps.google.com/?q=西式料理餐廳",
                     area=ImagemapArea(x=520, y=0, width=520, height=520)
                 ),
                 URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=中式料理餐廳",  # 中式料理網址
+                    link_uri="https://maps.google.com/?q=中式料理餐廳",
                     area=ImagemapArea(x=0, y=520, width=520, height=520)
                 ),
                 URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=法式料理餐廳",  # 法式料理網址
+                    link_uri="https://maps.google.com/?q=法式料理餐廳",
                     area=ImagemapArea(x=520, y=520, width=520, height=520)
                 )
             ]
