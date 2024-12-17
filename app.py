@@ -32,42 +32,37 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     message = event.message.text
-    if message == '推薦餐廳':
-        # 回傳 ImagemapSendMessage
-        imagemap_message = ImagemapSendMessage(
-            base_url='https://i.imgur.com/ZLFh4RV.png',  # 替換為您的圖片 URL（圖檔無副檔名）
-            alt_text='推薦餐廳',
-            base_size=BaseSize(height=1040, width=1040),
-            actions=[
-                URIImagemapAction(
-                    link_uri='https://www.google.com/maps?q=日式料理',
-                    area=ImagemapArea(x=0, y=0, width=520, height=520)
-                ),
-                URIImagemapAction(
-                    link_uri='https://www.google.com/maps?q=西式料理',
-                    area=ImagemapArea(x=520, y=0, width=520, height=520)
-                ),
-                URIImagemapAction(
-                    link_uri='https://www.google.com/maps?q=中式料理',
-                    area=ImagemapArea(x=0, y=520, width=520, height=520)
-                ),
-                URIImagemapAction(
-                    link_uri='https://www.google.com/maps?q=法式料理',
-                    area=ImagemapArea(x=520, y=520, width=520, height=520)
-                )
-            ]
+    if re.match('我要訂餐', message):  # 修正縮排錯誤
+        # 顯示訂單詳細內容
+        order_details = TextSendMessage(
+            text='無敵好吃牛肉麵 * 1 ，總價NT200'
         )
-        line_bot_api.reply_message(event.reply_token, imagemap_message)
         
-    elif message == '告訴我秘密':
-        image_message = ImageSendMessage(
-            original_content_url='https://www.campus-studio.com/download/flag.jpg',
-            preview_image_url='https://www.campus-studio.com/download/101.jpg'
+        # 顯示 ConfirmTemplate
+        confirm_template_message = TemplateSendMessage(
+            alt_text='請確認您的訂單',
+            template=ConfirmTemplate(
+                text='確認訂單嗎？',
+                actions=[
+                    PostbackAction(
+                        label='確定',
+                        display_text='訂單已確認',
+                        data='action=confirm_order'
+                    ),
+                    PostbackAction(
+                        label='取消',
+                        display_text='已取消訂單',
+                        data='action=cancel_order'
+                    )
+                ]
+            )
         )
-        line_bot_api.reply_message(event.reply_token, image_message)
+        
+        # 先回覆訂單詳情，再顯示 ConfirmTemplate
+        line_bot_api.reply_message(event.reply_token, [order_details, confirm_template_message])
         
     else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="很抱歉，我目前無法理解這個內容。"))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
 
 # 主程式
 import os
