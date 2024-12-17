@@ -32,7 +32,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     message = event.message.text
-   if re.match('我想吃飯', message):
+    if re.match('我想吃飯', message):  # 修正縮排錯誤
         # 顯示 QuickReply 選單
         quick_reply_message = TextSendMessage(
             text='請選擇您想要的選項：',
@@ -42,14 +42,13 @@ def handle_message(event):
                 QuickReplyButton(action=MessageAction(label="飲料", text="飲料"))
             ])
         )
-         line_bot_api.reply_message(event.reply_token, quick_reply_message)
+        line_bot_api.reply_message(event.reply_token, quick_reply_message)
     elif re.match('主菜', message):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【主菜】加入購物車"))
     elif re.match('湯品', message):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【湯品】加入購物車"))
     elif re.match('飲料', message):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【飲料】加入購物車"))
-        
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
 
