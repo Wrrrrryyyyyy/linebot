@@ -53,7 +53,7 @@ def handle_message(event):
         imagemap_message = ImagemapSendMessage(
             base_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89",
             alt_text="推薦餐廳選單",
-            base_size=BaseSize(height=1040, width=1040),
+            
             actions=[
                 URIImagemapAction(
                     link_uri="https://maps.google.com/?q=日式料理餐廳", 
