@@ -9,9 +9,6 @@ from linebot import (
 from linebot.exceptions import (
     InvalidSignatureError
 )
-from linebot.models import (
-    ImagemapSendMessage, BaseSize, URIImagemapAction, ImagemapArea
-)
 from linebot.models import *
 
 app = Flask(__name__)
@@ -44,39 +41,72 @@ def callback():
 
 #訊息傳遞區塊
 ##### 基本上程式編輯都在這個function #####
-
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_message = event.message.text
-
-    if user_message == "推薦餐廳":
-        imagemap_message = ImagemapSendMessage(
-            base_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/%E4%B8%8B%E8%BC%89.jpg",  # 正確的圖片 URL
-            alt_text="推薦餐廳選單",
-            base_size=BaseSize(height=1040, width=1040),  # 調整圖片大小
-            actions=[
-                URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=日式料理餐廳", 
-                    area=ImagemapArea(x=0, y=0, width=520, height=520)
+    
+    if user_message == "推薦景點":
+        # 定義旅遊景點的 CarouselTemplate
+        carousel_template = CarouselTemplate(
+            columns=[
+                CarouselColumn(
+                    title="台北101",
+                    text="台北的地標，提供壯觀的城市景觀。",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/101.jpg",  # 使用 GitHub 圖片的 raw URL
+                    actions=[
+                        URITemplateAction(
+                            label="查看詳情",
+                            uri="https://www.taipei-101.com.tw/en/"
+                        )
+                    ]
                 ),
-                URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=西式料理餐廳",
-                    area=ImagemapArea(x=520, y=0, width=520, height=520)
+                CarouselColumn(
+                    title="故宮博物院",
+                    text="展示數千年來的中國藝術珍品。",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/MUSEUM.jpg",  # 使用 GitHub 圖片的 raw URL
+                    actions=[
+                        URITemplateAction(
+                            label="查看詳情",
+                            uri="https://www.npm.gov.tw/"
+                        )
+                    ]
                 ),
-                URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=中式料理餐廳",
-                    area=ImagemapArea(x=0, y=520, width=520, height=520)
+                CarouselColumn(
+                    title="陽明山國家公園",
+                    text="有著美麗的山脈、熱帶植物和溫泉。",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/park.jpg",  # 使用 GitHub 圖片的 raw URL
+                    actions=[
+                        URITemplateAction(
+                            label="查看詳情",
+                            uri="https://www.ymn-nsa.gov.tw/"
+                        )
+                    ]
                 ),
-                URIImagemapAction(
-                    link_uri="https://maps.google.com/?q=法式料理餐廳",
-                    area=ImagemapArea(x=520, y=520, width=520, height=520)
+                CarouselColumn(
+                    title="九份",
+                    text="以古老的街道和美麗的海景著名。",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/nine.jpg",  # 使用 GitHub 圖片的 raw URL
+                    actions=[
+                        URITemplateAction(
+                            label="查看詳情",
+                            uri="https://www.northcoast-nsa.gov.tw/"
+                        )
+                    ]
                 )
             ]
         )
-        line_bot_api.reply_message(event.reply_token, imagemap_message)
+        
+        # 回傳 TemplateSendMessage
+        template_message = TemplateSendMessage(
+            alt_text="推薦景點",
+            template=carousel_template
+        )
+        
+        line_bot_api.reply_message(event.reply_token, template_message)
+    
     else:
-        reply_message = TextSendMessage(text="很抱歉，我目前無法理解這個內容。")
-        line_bot_api.reply_message(event.reply_token, reply_message)
+        # 回覆無法理解的訊息
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="很抱歉，我目前無法理解這個內容。"))
 #主程式
 import os
 if __name__ == "__main__":
