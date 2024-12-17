@@ -45,67 +45,34 @@ def callback():
 def handle_message(event):
     user_message = event.message.text
     
-    if user_message == "推薦景點":
-        # 定義旅遊景點的 CarouselTemplate
-        carousel_template = CarouselTemplate(
-            columns=[
-                CarouselColumn(
-                    title="台北101",
-                    text="台北的地標，提供壯觀的城市景觀。",
-                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/101.jpg",  # 使用 GitHub 圖片的 raw URL
-                    actions=[
-                        URITemplateAction(
-                            label="查看詳情",
-                            uri="https://www.taipei-101.com.tw/en/"
-                        )
-                    ]
+    if user_message == "我要訂餐":
+        # 顯示訂單資訊
+        order_details = TextSendMessage(text="【無敵好吃牛肉麵 * 1 ，總價NT200】")
+        line_bot_api.reply_message(event.reply_token, order_details)
+        
+        # 建立 ConfirmTemplate 來進行訂單確認
+        confirm_template = ConfirmTemplate(
+            text='是否確認訂單？',
+            actions=[
+                MessageAction(
+                    label='確定',
+                    text='訂單已確認，謝謝您的購買！'
                 ),
-                CarouselColumn(
-                    title="故宮博物院",
-                    text="展示數千年來的中國藝術珍品。",
-                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/MUSEUM.jpg",  # 使用 GitHub 圖片的 raw URL
-                    actions=[
-                        URITemplateAction(
-                            label="查看詳情",
-                            uri="https://www.npm.gov.tw/"
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    title="陽明山國家公園",
-                    text="有著美麗的山脈、熱帶植物和溫泉。",
-                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/park.jpg",  # 使用 GitHub 圖片的 raw URL
-                    actions=[
-                        URITemplateAction(
-                            label="查看詳情",
-                            uri="https://www.ymn-nsa.gov.tw/"
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    title="九份",
-                    text="以古老的街道和美麗的海景著名。",
-                    thumbnail_image_url="https://raw.githubusercontent.com/Wrrrrryyyyyy/linebot/main/nine.jpg",  # 使用 GitHub 圖片的 raw URL
-                    actions=[
-                        URITemplateAction(
-                            label="查看詳情",
-                            uri="https://www.northcoast-nsa.gov.tw/"
-                        )
-                    ]
+                MessageAction(
+                    label='取消',
+                    text='已取消訂單，謝謝您的光臨！'
                 )
             ]
         )
         
-        # 回傳 TemplateSendMessage
+        # 發送 ConfirmTemplate
         template_message = TemplateSendMessage(
-            alt_text="推薦景點",
-            template=carousel_template
+            alt_text='訂單確認',
+            template=confirm_template
         )
+        line_bot_api.push_message(event.reply_token, template_message)
         
-        line_bot_api.reply_message(event.reply_token, template_message)
-    
     else:
-        # 回覆無法理解的訊息
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="很抱歉，我目前無法理解這個內容。"))
 #主程式
 import os
