@@ -1,6 +1,10 @@
 from flask import Flask, request, abort
-from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
+from linebot import (
+    LineBotApi, WebhookHandler
+)
+from linebot.exceptions import (
+    InvalidSignatureError
+)
 from linebot.models import *
 import re
 
@@ -32,51 +36,185 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     message = event.message.text
-    if re.match('電影推薦', message):
-        image_carousel_template_message = TemplateSendMessage(
-            alt_text='電影推薦',
-            template=ImageCarouselTemplate(
-                columns=[
-                    # 第一部電影
-                    ImageCarouselColumn(
-                        image_url='https://m.media-amazon.com/images/M/MV5BYTg2Yjc5MzItNzVmMi00MTllLWI2MDQtOTYyOWNjYWIxNzEzXkEyXkFqcGc@._V1_.jpg',  # 替換為電影1的封面圖片URL
-                        action=PostbackAction(
-                            label='Sonic',
-                            display_text='電影1 詳情',
-                            data='1/12'
-                        )
-                    ),
-                    # 第二部電影
-                    ImageCarouselColumn(
-                        image_url='https://m.media-amazon.com/images/M/MV5BMDBiYzk0YTMtNWRiYi00YWY0LWE3NjgtYmJiYTAwZmYzOTM0XkEyXkFqcGc@._V1_.jpg',  # 替換為電影2的封面圖片URL
-                        action=PostbackAction(
-                            label='Sonic2',
-                            display_text='電影2 詳情',
-                            data='11/3'
-                        )
-                    ),
-                    # 第三部電影
-                    ImageCarouselColumn(
-                        image_url='https://dx35vtwkllhj9.cloudfront.net/paramountpictures/sonic-the-hedgehog-3-coppa/images/regions/us/onesheet_synopsis.jpg',  # 替換為電影3的封面圖片URL
-                        action=PostbackAction(
-                            label='Sonic3',
-                            display_text='電影3 詳情',
-                            data='12/27'
-                        )
-                    ),
-                    # 第四部電影
-                    ImageCarouselColumn(
-                        image_url='https://m.media-amazon.com/images/M/MV5BMzMwMTAwODczN15BMl5BanBnXkFtZTgwMDk2NDA4MTE@._V1_.jpg',  # 替換為電影4的封面圖片URL
-                        action=PostbackAction(
-                            label='訓龍高手2',
-                            display_text='電影4 詳情',
-                            data='movie=4'
-                        )
-                    )
+    if re.match('查看菜單', message):
+        # Flex Message 菜單推薦
+        flex_message = FlexSendMessage(
+            alt_text='餐廳菜單',
+            contents={
+                "type": "carousel",
+                "contents": [
+                    {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTebgo-vXBo8PWFDj4GDhTdewMxYzIPOtczDA&s",  # 請換成餐點圖片的URL
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover"
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "香煎牛排",
+                                    "weight": "bold",
+                                    "size": "xl"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "嫩煎牛排搭配香濃黑胡椒醬，口感極佳。",
+                                    "size": "sm",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "baseline",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": "NT 350",
+                                            "size": "lg",
+                                            "align": "end",
+                                            "weight": "bold"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "horizontal",
+                            "contents": [
+                                {
+                                    "type": "button",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "訂購",
+                                        "text": "已加入購物車"
+                                    },
+                                    "style": "primary"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://pic.k-cdn.media/2022/03/20220311-about-japanese-ramen-main.jpg",  # 請換成餐點圖片的URL
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover"
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "日式拉麵",
+                                    "weight": "bold",
+                                    "size": "xl"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "經典日式拉麵，湯頭濃郁，麵條爽滑。",
+                                    "size": "sm",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "baseline",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": "NT 250",
+                                            "size": "lg",
+                                            "align": "end",
+                                            "weight": "bold"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "horizontal",
+                            "contents": [
+                                {
+                                    "type": "button",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "訂購",
+                                        "text": "已加入購物車"
+                                    },
+                                    "style": "primary"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://candylife.tw/wp-content/uploads/20220803104512_16.jpg",  # 請換成餐點圖片的URL
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover"
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "招牌炸雞",
+                                    "weight": "bold",
+                                    "size": "xl"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "外脆內嫩，炸雞皮香氣十足，必點美食。",
+                                    "size": "sm",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "baseline",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": "NT 180",
+                                            "size": "lg",
+                                            "align": "end",
+                                            "weight": "bold"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "horizontal",
+                            "contents": [
+                                {
+                                    "type": "button",
+                                    "action": {
+                                        "type": "message",
+                                        "label": "訂購",
+                                        "text": "已加入購物車"
+                                    },
+                                    "style": "primary"
+                                }
+                            ]
+                        }
+                    }
                 ]
-            )
+            }
         )
-        line_bot_api.reply_message(event.reply_token, image_carousel_template_message)
+        line_bot_api.reply_message(event.reply_token, flex_message)
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
 
