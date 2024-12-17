@@ -1,18 +1,8 @@
-# -*- coding: utf-8 -*-
-
-#載入LineBot所需要的套件
 from flask import Flask, request, abort
-
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import (
-    TemplateSendMessage, ConfirmTemplate, MessageAction, TextSendMessage
-)
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
+import re
 
 app = Flask(__name__)
 
@@ -27,14 +17,10 @@ line_bot_api.push_message('U66b7a622411ff2975fb04a3d2fb0a8c1', TextSendMessage(t
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
-
-    # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    # handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
@@ -42,52 +28,48 @@ def callback():
 
     return 'OK'
 
-#訊息傳遞區塊
-##### 基本上程式編輯都在這個function #####
+# 訊息處理區塊
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message = text = event.message.text
-    if re.match('告訴我秘密', message):
-        image_message = ImageSendMessage(
-            original_content_url='https://www.campus-studio.com/download/flag.jpg',
-            preview_image_url='https://www.campus-studio.com/download/101.jpg'
-        )
-        line_bot_api.reply_message(event.reply_token, image_message)
-    elif re.match('推薦餐廳', message):
+    message = event.message.text
+    if message == '推薦餐廳':
         # 回傳 ImagemapSendMessage
         imagemap_message = ImagemapSendMessage(
             base_url='https://i.imgur.com/ZLFh4RV.png',  # 替換為您的圖片 URL（圖檔無副檔名）
             alt_text='推薦餐廳',
             base_size=BaseSize(height=1040, width=1040),
             actions=[
-                # 日式料理
                 URIImagemapAction(
                     link_uri='https://www.google.com/maps?q=日式料理',
                     area=ImagemapArea(x=0, y=0, width=520, height=520)
                 ),
-                # 西式料理
                 URIImagemapAction(
                     link_uri='https://www.google.com/maps?q=西式料理',
                     area=ImagemapArea(x=520, y=0, width=520, height=520)
                 ),
-                # 中式料理
                 URIImagemapAction(
                     link_uri='https://www.google.com/maps?q=中式料理',
                     area=ImagemapArea(x=0, y=520, width=520, height=520)
                 ),
-                # 法式料理
                 URIImagemapAction(
                     link_uri='https://www.google.com/maps?q=法式料理',
                     area=ImagemapArea(x=520, y=520, width=520, height=520)
                 )
-            ] 
-            )
-            line_bot_api.reply_message(event.reply_token, imagemap_message)
-
+            ]
+        )
+        line_bot_api.reply_message(event.reply_token, imagemap_message)
+        
+    elif message == '告訴我秘密':
+        image_message = ImageSendMessage(
+            original_content_url='https://www.campus-studio.com/download/flag.jpg',
+            preview_image_url='https://www.campus-studio.com/download/101.jpg'
+        )
+        line_bot_api.reply_message(event.reply_token, image_message)
         
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="很抱歉，我目前無法理解這個內容。"))
-#主程式
+
+# 主程式
 import os
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
