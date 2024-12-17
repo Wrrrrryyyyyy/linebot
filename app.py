@@ -46,34 +46,44 @@ def callback():
 ##### 基本上程式編輯都在這個function #####
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    user_message = event.message.text
-    
-    if user_message == "我要訂餐":
-        # 顯示訂單資訊
-        order_details = TextSendMessage(text="【無敵好吃牛肉麵 * 1 ，總價NT200】")
-        line_bot_api.reply_message(event.reply_token, order_details)
-        
-        # 建立 ConfirmTemplate 來進行訂單確認
-        confirm_template = ConfirmTemplate(
-            text='是否確認訂單？',
+    message = text = event.message.text
+    if re.match('告訴我秘密', message):
+        image_message = ImageSendMessage(
+            original_content_url='https://www.campus-studio.com/download/flag.jpg',
+            preview_image_url='https://www.campus-studio.com/download/101.jpg'
+        )
+        line_bot_api.reply_message(event.reply_token, image_message)
+    elif re.match('推薦餐廳', message):
+        # 回傳 ImagemapSendMessage
+        imagemap_message = ImagemapSendMessage(
+            base_url='https://i.imgur.com/ZLFh4RV.png',  # 替換為您的圖片 URL（圖檔無副檔名）
+            alt_text='推薦餐廳',
+            base_size=BaseSize(height=1040, width=1040),
             actions=[
-                MessageAction(
-                    label='確定',
-                    text='訂單已確認，謝謝您的購買！'
+                # 日式料理
+                URIImagemapAction(
+                    link_uri='https://www.google.com/maps?q=日式料理',
+                    area=ImagemapArea(x=0, y=0, width=520, height=520)
                 ),
-                MessageAction(
-                    label='取消',
-                    text='已取消訂單，謝謝您的光臨！'
+                # 西式料理
+                URIImagemapAction(
+                    link_uri='https://www.google.com/maps?q=西式料理',
+                    area=ImagemapArea(x=520, y=0, width=520, height=520)
+                ),
+                # 中式料理
+                URIImagemapAction(
+                    link_uri='https://www.google.com/maps?q=中式料理',
+                    area=ImagemapArea(x=0, y=520, width=520, height=520)
+                ),
+                # 法式料理
+                URIImagemapAction(
+                    link_uri='https://www.google.com/maps?q=法式料理',
+                    area=ImagemapArea(x=520, y=520, width=520, height=520)
                 )
-            ]
-        )
-        
-        # 發送 ConfirmTemplate
-        template_message = TemplateSendMessage(
-            alt_text='訂單確認',
-            template=confirm_template
-        )
-        line_bot_api.push_message(event.reply_token, template_message)
+            ] 
+            )
+            line_bot_api.reply_message(event.reply_token, imagemap_message)
+
         
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="很抱歉，我目前無法理解這個內容。"))
