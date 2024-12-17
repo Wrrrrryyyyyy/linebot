@@ -32,23 +32,51 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     message = event.message.text
-    if re.match('我想吃飯', message):  # 修正縮排錯誤
-        # 顯示 QuickReply 選單
-        quick_reply_message = TextSendMessage(
-            text='請選擇您想要的選項：',
-            quick_reply=QuickReply(items=[
-                QuickReplyButton(action=MessageAction(label="主菜", text="主菜")),
-                QuickReplyButton(action=MessageAction(label="湯品", text="湯品")),
-                QuickReplyButton(action=MessageAction(label="飲料", text="飲料"))
-            ])
+    if re.match('電影推薦', message):
+        image_carousel_template_message = TemplateSendMessage(
+            alt_text='電影推薦',
+            template=ImageCarouselTemplate(
+                columns=[
+                    # 第一部電影
+                    ImageCarouselColumn(
+                        image_url='https://m.media-amazon.com/images/M/MV5BYTg2Yjc5MzItNzVmMi00MTllLWI2MDQtOTYyOWNjYWIxNzEzXkEyXkFqcGc@._V1_.jpg',  # 替換為電影1的封面圖片URL
+                        action=PostbackAction(
+                            label='Sonic',
+                            display_text='電影1 詳情',
+                            data='1/12'
+                        )
+                    ),
+                    # 第二部電影
+                    ImageCarouselColumn(
+                        image_url='https://m.media-amazon.com/images/M/MV5BMDBiYzk0YTMtNWRiYi00YWY0LWE3NjgtYmJiYTAwZmYzOTM0XkEyXkFqcGc@._V1_.jpg',  # 替換為電影2的封面圖片URL
+                        action=PostbackAction(
+                            label='Sonic2',
+                            display_text='電影2 詳情',
+                            data='11/3'
+                        )
+                    ),
+                    # 第三部電影
+                    ImageCarouselColumn(
+                        image_url='https://dx35vtwkllhj9.cloudfront.net/paramountpictures/sonic-the-hedgehog-3-coppa/images/regions/us/onesheet_synopsis.jpg',  # 替換為電影3的封面圖片URL
+                        action=PostbackAction(
+                            label='Sonic3',
+                            display_text='電影3 詳情',
+                            data='12/27'
+                        )
+                    ),
+                    # 第四部電影
+                    ImageCarouselColumn(
+                        image_url='https://m.media-amazon.com/images/M/MV5BMzMwMTAwODczN15BMl5BanBnXkFtZTgwMDk2NDA4MTE@._V1_.jpg',  # 替換為電影4的封面圖片URL
+                        action=PostbackAction(
+                            label='訓龍高手2',
+                            display_text='電影4 詳情',
+                            data='movie=4'
+                        )
+                    )
+                ]
+            )
         )
-        line_bot_api.reply_message(event.reply_token, quick_reply_message)
-    elif re.match('主菜', message):
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【主菜】加入購物車"))
-    elif re.match('湯品', message):
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【湯品】加入購物車"))
-    elif re.match('飲料', message):
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="您已成功將【飲料】加入購物車"))
+        line_bot_api.reply_message(event.reply_token, image_carousel_template_message)
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
 
